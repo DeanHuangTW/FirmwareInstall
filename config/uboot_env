@@ -1,0 +1,99 @@
+setenv mmcid 0
+setenv bootdelay 0
+
+setenv ipaddr 192.168.0.2
+setenv serverip 192.168.0.1
+setenv gatewayip 10.1.31.254
+setenv netmask 255.255.248.0
+
+setenv wmt.display.logoaddr 500000
+setenv logocmd \
+  nandrw r ${wmt.nfc.mtd.u-boot-logo} ${wmt.display.logoaddr} ${wmt.logosize.uboot}\; \
+  display show
+
+setenv wmt.audio.i2s vt1603:0
+setenv wmt.i2c.param 0:1,1:1,2:1,3:1
+
+setenv wmt.io.bat 3:2:1000:f25:dc4:e30:e05:ddd:dbc:d9b:d7e:d57:d1f:cf1:ccd:ca1
+setenv wmt.io.bateff.adapter df3-f23:df3-f23:df3-f23:df3-f23:df3-f23:df3-f23:daa-ee0:d71-ea4:d14-e63:ccc-e10
+setenv wmt.io.bateff.brightness e20-e84:e20-e84:e20-e84:e20-e84:e20-e84:e20-e84:ddb-e46:d9a-e09:d55-dcb:cef-d7a
+setenv wmt.io.bateff.wifi e1c-e27:e1c-e27:e1c-e27:e1c-e27:e1c-e27:e1c-e27:dd9-de7:d9b-da6:d53-d62:cef-cf9
+setenv wmt.gpi.bat vt1603:5:0
+setenv wmt.charger.param 0:153:0
+
+setenv wmt.io.kxte9gsensor 1:0:-1:1:1:2:-1:0:0:0
+setenv wmt.io.mc3230sensor 1:3:10:1:-1:0:-1:2:-1:0:0:0
+setenv wmt.io.dm08sensor 1:3:5:0:-1:1:-1:2:1:0:0:0
+setenv wmt.io.dm10sensor 1:3:5:0:-1:1:-1:2:1:0:0:0
+setenv wmt.io.d06sensor 1:3:5:0:-1:1:-1:2:1:0:0:0
+setenv wmt.io.mma7660gsensor 1:1:-1:0:-1:2:-1:0:0:0
+setenv wmt.io.mxc622xsensor 1:3:10:0:1:1:-1:2:1:0:0:0
+setenv wmt.gpt.gsensor 8:100:d8110040:d8110080:d8110000:d8110480:d81104c0:30000:d8110300:100:d8110304:6a
+
+setenv wmt.eth.param 0x11
+setenv wmt.camera.param 1:12:0:0:0:1:13:0:0:0
+setenv wmt.sd0.param 1:0:0:0
+setenv wmt.sd1.param 0:0
+setenv wmt.sd2.param 1:1
+
+setenv wmt.lcd.power 0:1
+setenv wmt.backlight.param 0:1:11:1
+setenv wmt.display.pwm 10:22000:75
+setenv wmt.display.dual 1
+
+setenv wmt.gpo.vibrator 1:1:2:D8110040:D8110080:D81100C0:1
+setenv wmt.pwbn.param 32:32:32
+setenv wmt.io.kpad 2:[8,115]:[10,114]
+setenv wmt.usb.param 11:3
+
+#upgrade FW from UDisk
+#setenv wmt.install.dev usb
+
+# multi-decode max count
+setenv wmt.multi.vd.max 4
+
+setenv wmt.ge.param 1:12:-1:8
+setenv wmt.gralloc.param 0x20
+setenv wmt.mali.param 1:-1:-1:-1
+
+setenv wmt.misc.param 1500000
+setenv wmt.cpufreq.param 1:50:6:[600,1050,2,1,1,2][800,1050,2,1,1,2][1000,1175,2,1,1,2][1200,1175,2,1,1,2][1400,1250,2,1,1,2][1500,1250,2,1,1,2]
+setenv wmt.cpufreqlp.param 1:50:6:[600,1050,2,1,1,2][800,1050,2,1,1,2][1000,1175,2,1,1,2][1200,1175,2,1,1,2][1400,1250,2,1,1,2][1500,1250,2,1,1,2]
+setenv wmt.cfadj.param 1:6:[300][400][600][600][800][800]
+setenv wmt.cflpadj.param 1:6:[300][400][600][600][800][800]
+setenv wmt.mmfreq.param 1:100:2:[1175,3,3,4,4,4,4]:[1175,3,3,4,4,4,4]
+setenv wmt.mmfreqlp.param 1:100:2:[1175,3,3,4,4,4,4]:[1175,3,3,4,4,4,4]
+setenv wmt.plla.param 1:800:1:2:1:1:1
+setenv wmt.pllb.param 1:700:[3,5,4,2,3]:[0,14,28,14,0]:[0,18,4,4,4]:[11]
+setenv wmt.plld.param 1:4:4:4:4
+setenv wmt.l2c.param 1:3e450000:70000007:1:1:fff00000
+
+setenv wmt.pmc.param 1:0070c000:44000000:00000000:00700000:0
+
+setenv wmt.pmic.param 1:upi6631:3:400
+
+setenv wmt.display.hdmi.vmode auto
+setenv wmt.camera.i2c_gpio 0
+setenv wmt.gpo.powerstate 0:1:0:d8110041:d8110081:d81100c1
+
+#following is from TP
+#setenv wmt.gpo.wifi 6:1:6:d8110040:d8110080:d81100C0
+
+#fastboot
+setenv wmt.fb.param 1:0:0:0
+
+#switch of android charge-mode
+#setenv charge.mode charger
+
+setenv load-addr-kernel 0x01000000
+setenv load-addr-initrd 0x02000000
+setenv set-rfs-ram-ota setenv bootargs mem=${memtotal} root=/dev/ram0 rw initrd=${load-addr-initrd},0x${filesize} console=ttyS0,115200n8 init=/init androidboot.serialno=${androidboot.serialno} quiet
+setenv boot-kernel run set-rfs-ram-ota; bootm ${load-addr-kernel}
+
+setenv boot-nand-ota-normal nandrw boot ${boot-NAND_ofs} ${load-addr-kernel} ${load-addr-initrd} filesize
+setenv boot-nand-ota-recovery nandrw boot ${recov-NAND_ofs} ${load-addr-kernel} ${load-addr-initrd} filesize
+
+setenv boot-method boot-nand-ota-normal
+
+setenv bootcmd run ${boot-method}; run boot-kernel; echo No kernel found
+

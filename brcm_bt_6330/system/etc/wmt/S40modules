@@ -1,0 +1,186 @@
+#!/bin/sh
+################################################################################
+#                                                                              #
+# Copyright c 2009  WonderMedia Technologies, Inc.   All Rights Reserved.      #
+#                                                                              #
+# This PROPRIETARY SOFTWARE is the property of WonderMedia Technologies, Inc.  #
+# and may contain trade secrets and/or other confidential information of       #
+# WonderMedia Technologies, Inc. This file shall not be disclosed to any third #
+# party, in whole or in part, without prior written consent of WonderMedia.    #
+#                                                                              #
+# THIS PROPRIETARY SOFTWARE AND ANY RELATED DOCUMENTATION ARE PROVIDED AS IS,  #
+# WITH ALL FAULTS, AND WITHOUT WARRANTY OF ANY KIND EITHER EXPRESS OR IMPLIED, #
+# AND WonderMedia TECHNOLOGIES, INC. DISCLAIMS ALL EXPRESS OR IMPLIED          #
+# WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, QUIET       #
+# ENJOYMENT OR NON-INFRINGEMENT.                                               #
+#                                                                              #
+################################################################################
+
+#  (module, device)
+
+
+MODULE_PATH="/system/modules/3.4.5-default"
+
+# gtv100 reference, just for Codis DTV module
+if [ -e $MODULE_PATH/gtv100.ko ]; then
+    mknod -m 666 /dev/mtv350 c 180 192
+fi
+  
+
+#########################################################
+#   according to RO propery variant: ro.wmt.hw.modules  #
+#   insmod corresponding driver modules                 #
+#   item in wmt.hw.modules must be separated by comma   #
+#########################################################
+
+common_modules=`getprop ro.wmt.drv.common`
+add_modules=`getprop ro.wmt.drv.add`
+add2_modules=`getprop ro.wmt.drv.add2`
+remove_modules=`getprop ro.wmt.drv.remove`
+load_modules="$common_modules,$add_modules,$add2_modules"
+
+echo "common_modules: $common_modules"
+echo "add_modules: $add_modules"
+echo "remove_modules: $remove_modules"
+echo "load_modules: $load_modules"
+
+remove_modules=`echo $remove_modules | sed 's/,/ /g'`
+load_modules=`echo $load_modules | sed 's/,/ /g'`
+
+for ditem in $remove_modules
+do
+    echo "remove $ditem"
+    load_modules=`echo $load_modules | sed ''s/$ditem//g''`
+    echo "load_modules(Current): $load_modules"
+done
+
+
+load_modules=`echo $load_modules | tr -s ' '`
+
+echo "load_modules(End): $load_modules"
+
+
+for item in $load_modules
+do
+    case $item in
+        wifi-button)
+            insmod $MODULE_PATH/wmt_gpio_keys.ko
+            echo "wifi-button branch"
+        ;;
+        usb_net)
+#           insmod $MODULE_PATH/usbnet.ko
+#           insmod $MODULE_PATH/sr9700.ko
+            echo "usb_net branch"
+        ;;
+        s_wmt_ts_*)
+            if [ ! -f /proc/wmtts_config ]; then
+                insmod $MODULE_PATH/$item.ko
+                echo "Try to insmod $item.ko"
+            fi
+        ;;
+#################################################
+#            here you can add your own special process    #
+#################################################
+
+        *)
+            insmod $MODULE_PATH/$item.ko
+            echo "insmod $item in default branch"
+        ;;
+    esac
+done
+
+##################### insmod g-sensor driver ###################################
+GSENSOR_CFG_FILE="${SYS_MNT}/etc/gsensor_configed"
+if [ -f ${GSENSOR_CFG_FILE} ]; then
+	cfg_sensor=`cat ${GSENSOR_CFG_FILE}`
+    sensor_drv=$MODULE_PATH/${cfg_sensor}.ko
+	if [ -f $sensor_drv ]; then
+		insmod $sensor_drv
+		if [ ${cfg_sensor} == "s_wmt_gsensor_dmard10" ]; then
+                        chmod 644 /sys/devices/virtual/accelemeter/dmt/delay_acc
+                        chown 1000 /sys/devices/virtual/accelemeter/dmt/delay_acc
+                        chmod 644 /sys/devices/virtual/accelemeter/dmt/enable_acc
+                        chown 1000 /sys/devices/virtual/accelemeter/dmt/enable_acc
+                fi
+		if [ ${cfg_sensor} == "s_wmt_gsensor_stk8312" ]; then
+			touch /data/misc/stkacccali.conf
+                        chmod 666 /data/misc/stkacccali.conf
+		fi		
+    else
+        echo "G-Senser driver not found($sensor_drv)"
+	fi
+fi
+
+############ insmod special touch panel driver #############
+tp_param=`wmtenv get wmt.io.touch`
+if [ ! -z "$tp_param" ]; then
+    tp_name=`echo $tp_param | cut -d':' -f2`
+    if [ ! -z `echo $tp_name | grep ^ZET` ]; then
+        tp_module=s_wmt_ts_zet6221
+    elif [ ! -z `echo $tp_name | grep ^GSL` ]; then
+        tp_module=s_wmt_ts_gsl1680
+    elif [ ! -z `echo $tp_name | grep ^ft` ]; then
+        tp_module=s_wmt_ts_ft5x0x
+    elif [ ! -z `echo $tp_name | grep ^SSD` ]; then
+        tp_module=s_wmt_ts_ssd253x
+    elif [ ! -z `echo $tp_name | grep ^LW` ]; then
+        tp_module=s_wmt_ts_lw86x0
+    elif [ ! -z `echo $tp_name | grep ^gt` ]; then
+        tp_module=s_wmt_ts_gt9xx
+    elif [ ! -z `echo $tp_name | grep ^aw` ]; then
+        tp_module=s_wmt_ts_aw5306
+    elif [ ! -z `echo $tp_name | grep ^cyp` ]; then
+        tp_module=s_wmt_ts_cyp140
+    elif [ ! -z `echo $tp_name | grep ^st` ]; then
+        tp_module=s_wmt_ts_sitronix
+    else
+        echo "*W* unknown TP name($tp_name)"
+    fi
+    
+    if [ ! -z "$tp_module" ]; then
+        echo "insmod $tp_module"
+        insmod $MODULE_PATH/$tp_module.ko
+    fi
+fi
+
+############ insod bt module drivers################   
+#for mtk6622: setprop    ro.wmt.bt   bt_hwctl
+#for brcm ap6476 and ap6330: setprop    ro.wmt.bt   wmt_rfkill_bluetooth
+bt_module=`getprop ro.wmt.bt`
+if [ ! -z "$bt_module" ]; then
+   echo "insmod $bt_module"
+   insmod $MODULE_PATH/$bt_module.ko
+   chmod 0666 /dev/ttyS1
+   if [ $bt_module == "bt_hwctl" ];then
+	   chmod 0666 /dev/bthwctl
+   fi
+   if [ $bt_module == "wmt_rfkill_bluetooth" ];then
+	   chmod 0666 /sys/class/rfkill/rfkill0/state
+   fi
+   mkdir /data/bluetooth
+   chmod 0777 /data/bluetooth
+fi
+bt_module1=`getprop wifi.driver.name`
+if [ "$bt_module1" = "8723au" ]; then
+   insmod $MODULE_PATH/rtk_btusb.ko
+   chmod 0666 /dev/rtk_btusb
+fi
+###########################################################
+#encrypt chip
+MODEM_TYPE=`cat /system/etc/ppp/ril.modem.type 2>/dev/null`
+if [ "$MODEM_TYPE" == "1" ] || [ "$MODEM_TYPE" == "4" ]; then
+    echo "Read modem type: $MODEM_TYPE"
+    insmod $MODULE_PATH/s_wmt_alpu.ko
+fi
+
+RIL_MODEM_TYPE_MTK="ril.modem.type=3"
+RIL_MODEM_TYPE_SP="ril.modem.type=7"
+RIL_MODEM_TYPE_MTK_VALUE=`grep $RIL_MODEM_TYPE_MTK /system/default.prop`
+RIL_MODEM_TYPE_SP_VALUE=`grep $RIL_MODEM_TYPE_SP /system/default.prop`
+echo $RIL_MODEM_TYPE_MTK_VALUE
+echo $RIL_MODEM_TYPE_SP_VALUE
+if [ "$RIL_MODEM_TYPE_MTK_VALUE" != "" ] || [ "$RIL_MODEM_TYPE_SP_VALUE" != "" ]; then
+    insmod $MODULE_PATH/s_wmt_alpu.ko
+fi
+############################
+
