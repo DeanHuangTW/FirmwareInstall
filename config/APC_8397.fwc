@@ -44,6 +44,9 @@
         <cmd>setprop media.player.DRM.check 0</cmd>
         <cmd>setprop ro.wmt.wondertv.server.address http://112.95.146.147:82/wondertv/</cmd>
         <cmd>setprop ro.wmt.wondertv.otalocal.addr /storage/sdcard1/update/otaupdate.zip</cmd>
+        <cmd>setenv wmt.bt.tty 1</cmd>
+        <cmd>setprop ro.wmt.bt bt_hwctl</cmd>
+        <cmd>export BT_model=MTK6622</cmd>
         <cmd>setprop ro.wmt.bootanim.args 6000,-1,-1,0</cmd>
         <cmd>setprop ro.wmt.screensaver.enable 1</cmd>
         <cmd>setprop ro.wmt.screensaver.slide.enable 1</cmd>

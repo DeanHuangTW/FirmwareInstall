@@ -1,0 +1,79 @@
+{
+  "name": "Messages",
+  "description": "Gaia Messages",
+  "type": "certified",
+  "launch_path": "/index.html",
+  "developer": {
+    "name": "The Gaia Team",
+    "url": "https://github.com/mozilla-b2g/gaia"
+  },
+  "permissions": {
+    "sms":{},
+    "storage":{},
+    "mobileconnection":{},
+    "contacts":{ "access": "readonly" },
+    "settings":{ "access": "readwrite" },
+    "audio-channel-notification":{},
+    "desktop-notification":{},
+    "phonenumberservice": {}
+  },
+  "locales": {
+    "ar": {
+      "name": "رسائل",
+      "description": "Gaia رسائل"
+    },
+    "en-US": {
+      "name": "Messages",
+      "description": "Gaia Messages"
+    },
+    "fr": {
+      "name": "Messages",
+      "description": "Messages Gaia"
+    },
+    "zh-TW": {
+      "name": "訊息",
+      "description": "Gaia 訊息"
+    }
+  },
+  "default_locale": "en-US",
+  "icons": {
+    "60": "/style/icons/Sms_60.png",
+    "90": "/style/icons/Sms_90.png",
+    "120": "/style/icons/Sms_120.png",
+    "135": "/style/icons/Sms_135.png"
+  },
+  "orientation": "default",
+  "activities": {
+    "new": {
+      "href": "/index.html#activity-new",
+      "filters": {
+        "type": "websms/sms",
+        "number": {
+          "pattern":"[\\w\\s+#*().-]{0,50}"
+        }
+       },
+      "disposition": "inline",
+      "returnValue": true
+    },
+    "share": {
+      "href": "/index.html#activity-share",
+      "filters": {
+        "type": ["image/*", "audio/*", "video/*"],
+        "number": {
+          "max": 5
+        }
+       },
+      "disposition": "inline",
+      "returnValue": true
+    }
+  },
+  "messages": [
+     { "sms-received": "/index.html" },
+     { "notification": "/index.html" }
+  ],
+  "datastores-access": {
+    "Gaia_Facebook_Friends": {
+      "description": "Facebook Friends"
+    }
+  }
+}

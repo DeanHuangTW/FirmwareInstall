@@ -391,7 +391,7 @@ env_addon()
         restore_env androidboot.serialno
     fi
     restore_env serialnum pcba.serialno uuid.ro
-    restore_env wmt.btaddr.persist btaddr
+    restore_env wmt.btaddr.persist btaddr wmt.install.dev
 }
 
 #
@@ -993,7 +993,7 @@ process_special()
 
     if [ -n "$special_mbsize" ]; then
         info 1 "[WMT] set special mbsize for $instenv_model_no."
-        setenv memtotal $special_mbsize
+        setenv mbsize $special_mbsize
     fi
     
     if [ -n "$HDMI_only" ]; then

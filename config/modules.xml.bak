@@ -1,0 +1,625 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<project chip="wm8850" version="1.1">
+	<introduction>
+		<!-- LCD 的3个参数放在Extra中，并使用"+"打头 -->
+		<!-- Camera/Setting remove item 放在Extra中 -->
+		<!-- WiFi Button/Volume 也放在Extra中 -->
+		<!-- Extra中的内容如果和上面的Combo-box重叠，以Extra中的为准 -->
+	</introduction>
+	<TODO>
+		<!-- 增加启动方式选择 -->
+		<!-- Nand(Default)/TF/UDISK -->
+	</TODO>
+	<modules>
+		<DDR_TYPE lable="内存" default="">
+			<item name="参考板载信息">
+				<cmd></cmd>
+			</item>
+			<item name="2片 32bit 512M">
+				<cmd>export instenv_wload=firmware/w-load_DDR3_5_3_2_2_512MB.bin</cmd>
+			</item>
+			<item name="4片 32bit 512M">
+				<cmd>export instenv_wload=firmware/w-load_DDR3_5_3_2_4_512MB.bin</cmd>
+			</item>
+			<item name="2片 32bit 1024M">
+				<cmd>export instenv_wload=firmware/w-load_DDR3_5_3_2_2_1024MB.bin</cmd>
+			</item>			
+			<item name="4片 32bit 1024M">
+				<cmd>export instenv_wload=firmware/w-load_DDR3_5_3_2_4_1024MB.bin</cmd>
+			</item>
+		</DDR_TYPE>
+		<BOOTDEV lable="启动设备" default="NAND">
+			<item name="NAND">
+				<cmd>info 0 Boot from NAND</cmd>
+			</item>
+			<item name="TF">
+				<cmd>info 0 Boot from TF</cmd>
+				<cmd>setenv wmt.sd1.param 1:0</cmd>
+				<cmd>setenv wmt.load.chganim 'mmcinit 1\;fatload mmc 1 ${wmt.chganim.memaddr} charge_anim.data'</cmd>
+				<cmd>setenv logocmd 'mmcinit 1\;fatload mmc 1 ${wmt.display.logoaddr} u-boot-logo.bmp\;display show'</cmd>
+				<cmd>setenv boot-nand-ota-normal 'fatload mmc 1 0 boot.img\;parseimg 0 ${load-addr-kernel} ${load-addr-initrd} filesize'</cmd>
+				<cmd>setenv boot-nand-ota-recovery 'fatload mmc 1 0 recovery.img\;parseimg 0 ${load-addr-kernel} ${load-addr-initrd} filesize'</cmd>
+			</item>
+		</BOOTDEV>
+		<TOUCH lable="触摸屏" default="">
+			<item name="无">
+				<cmd>export touch_panel=disable</cmd>
+			</item>
+			<item name="GSL1680_7xclg7027a">
+				<cmd>setenv wmt.io.touch 1:GSL1680_7xclg7027a:7:600:1024:4:0:-1:1:10:64</cmd>
+				<cmd>setenv wmt.backlight.delay 500</cmd>
+			</item>			
+			<item name="GSL3680_f0027a2">
+				<cmd>setenv wmt.io.touch 1:GSL3680_f0027a2:7:800:1280:4:0:-1:1:10:64</cmd>
+				<cmd>setenv wmt.backlight.delay 500</cmd>
+			</item>
+			<item name="GSL3680B_CTP101A079">
+				<cmd>setenv wmt.io.touch 1:GSL3680B_CTP101A079:7:768:1024:4:0:-1:1:10:64</cmd>
+				<cmd>setenv wmt.backlight.delay 500</cmd>
+			</item>
+			<item name="GSL3680_TYF1099V1">
+				<cmd>setenv wmt.io.touch 1:GSL3680_TYF1099V1:7:600:1024:4:0:-1:1:10:64</cmd>
+				<cmd>setenv wmt.backlight.delay 500</cmd>
+			</item>
+			<item name="GSL3680_YXD_SD">
+				<cmd>setenv wmt.io.touch 1:GSL3680_YXD_SD:7:600:1024:4:0:-1:1:10:64</cmd>
+				<cmd>setenv wmt.backlight.delay 500</cmd>
+			</item>
+			<item name="GSL3680_TYF1012V5">
+				<cmd>setenv wmt.io.touch 1:GSL3680_TYF1012V5:9:600:1024:4:0:-1:1:10:64</cmd>
+				<cmd>setenv wmt.backlight.delay 500</cmd>
+			</item>
+			<item name="GSL1680_TYF1012V5">
+				<cmd>setenv wmt.io.touch 1:GSL1680_TYF1012V5:7:600:1024:4:0:-1:1:10:64</cmd>
+				<cmd>setenv wmt.backlight.delay 500</cmd>
+			</item>
+			<item name="GSL1680_TYF1012V5_SD">
+				<cmd>setenv wmt.io.touch 1:GSL1680_TYF1012V5_SD:7:600:1024:4:0:-1:1:10:64</cmd>
+				<cmd>setenv wmt.backlight.delay 500</cmd>
+			</item>
+			<item name="GSL1680_tyf1039v3">
+				<cmd>setenv wmt.io.touch 1:GSL1680_tyf1039v3:7:600:1024:4:0:-1:1:10:64</cmd>
+				<cmd>setenv wmt.backlight.delay 500</cmd>
+			</item>
+			<item name="GSL1680_Z7Z160D">
+				<cmd>setenv wmt.io.touch 1:GSL1680_Z7Z160D:7:600:1024:4:0:-1:1:10:64</cmd>
+				<cmd>setenv wmt.backlight.delay 500</cmd>
+			</item>
+			<item name="GSL1680_SG5704">
+				<cmd>setenv wmt.io.touch 1:GSL1680_Z7Z160D:7:600:1024:4:0:1:1:10:64</cmd>
+				<cmd>setenv wmt.backlight.delay 500</cmd>
+			</item>
+			<item name="GSL2680_f0268xdy">
+				<cmd>setenv wmt.io.touch 1:GSL2680_f0268xdy:7:768:1024:4:0:-1:-1:10:64</cmd>
+				<cmd>setenv wmt.backlight.delay 500</cmd>
+			</item>
+			<item name="GSL3670_SL008DH01FPC">
+				<cmd>setenv wmt.io.touch 1:GSL3670_SL008DH01FPC:7:768:1024:4:0:-1:-1:10:64</cmd>
+				<cmd>setenv wmt.backlight.delay 500</cmd>
+			</item>			
+			<item name="GSL2682_ZCC2256">
+				<cmd>setenv wmt.io.touch 1:GSL2682_ZCC2256:7:768:1024:4:0:1:1:10:64</cmd>
+				<cmd>setenv wmt.backlight.delay 500</cmd>
+			</item>
+			<item name="GSL2682_LHJ0196V1">
+				<cmd>setenv wmt.io.touch 1:GSL2682_LHJ0196V1:7:768:1024:4:0:1:1:10:64</cmd>
+				<cmd>setenv wmt.backlight.delay 500</cmd>
+			</item>
+			<item name="GSL2682_WGJ78040">
+				<cmd>setenv wmt.io.touch 1:GSL2682_WGJ78040:7:768:1024:4:0:1:1:10:64</cmd>
+				<cmd>setenv wmt.backlight.delay 500</cmd>
+			</item>			
+			<item name="GSL3680_MJK0119">
+				<cmd>setenv wmt.io.touch 1:GSL3680_MJK0119:7:768:1024:4:0:1:1:10:64</cmd>
+				<cmd>setenv wmt.backlight.delay 500</cmd>
+			</item>
+			<item name="GSL3680_WGJ7361AW46V2">
+				<cmd>setenv wmt.io.touch 1:GSL3680_WGJ7361AW46V2:7:768:1024:4:0:1:1:10:64</cmd>
+				<cmd>setenv wmt.backlight.delay 500</cmd>
+			</item>
+			<item name="GSL2681B_WGJ0407800969">
+				<cmd>setenv wmt.io.touch 1:GSL2681B_WGJ0407800969:7:768:1024:4:0:1:1:10:64</cmd>
+				<cmd>setenv wmt.backlight.delay 500</cmd>
+			</item>
+			<item name="GSL2681_HQ720">
+				<cmd>setenv wmt.io.touch 1:GSL2681_HQ720:7:800:1280:4:0:1:1:10:64</cmd>
+			</item>
+			<item name="GSL2681_ZP90667">
+				<cmd>setenv wmt.io.touch 1:GSL2681_ZP90667:7:480:800:4:1:1:1:10:64</cmd>
+				<cmd>setenv wmt.io.tskey 98:102:818:822:58:62:818:822:18:22:818:822:5555:5555:5555:5555</cmd>
+				<cmd>setenv wmt.backlight.delay 500</cmd>
+			</item>
+			<item name="GSL2681_MGLCTP148A">
+				<cmd>setenv wmt.io.touch 1:GSL2681_MGLCTP148A:7:480:800:4:1:1:1:10:64</cmd>
+				<cmd>setenv wmt.io.tskey 98:102:818:822:58:62:818:822:18:22:818:822:5555:5555:5555:5555</cmd>
+				<cmd>setenv wmt.backlight.delay 500</cmd>
+			</item>
+			<item name="CTP7_ST1536_FM700402TC">
+				<cmd>setenv wmt.io.touch 1:st1536:480:800:7:4:0:0:0</cmd>
+			</item>
+			<item name="CTP10.1_ZET6223_ZCC2088">
+				<cmd>setenv wmt.io.touch 1:ZET6221_10zcc2088:7:600:1024:4:1:-1:-1:5</cmd>
+			</item>
+			<item name="ZET6223_CTP140101A">
+				<cmd>setenv wmt.io.touch 1:ZET6223_CTP140101A:7:600:1024:4:1:-1:-1:5</cmd>
+			</item>
+			<item name="ZET6223_TPC0359">
+				<cmd>setenv wmt.io.touch 1:ZET6223_TPC0359:7:600:1024:4:1:-1:-1:5</cmd>
+			</item>
+			<item name="ZET6223_QLT1007">
+				<cmd>setenv wmt.io.touch 1:ZET6223_QLT1007:7:600:1024:4:1:-1:-1:5</cmd>
+			</item>
+			<item name="ZET6223_CZY6613A01">
+				<cmd>setenv wmt.io.touch 1:ZET6223_CZY6613A01:7:600:1024:4:1:-1:-1:5</cmd>
+			</item>
+			<item name="ZET6223_GT1010PD035">
+				<cmd>setenv wmt.io.touch 1:ZET6223_GT1010PD035:7:600:1024:4:1:-1:-1:5</cmd>
+			</item>
+			<item name="ZET6223_CTP164090A">
+				<cmd>setenv wmt.io.touch 1:ZET6221_CTP164090A:7:600:1024:4:1:-1:-1:5</cmd>
+			</item>
+			<item name="ZET6223_PB90A8857">
+				<cmd>setenv wmt.io.touch 1:ZET6223_PB90A8857:7:600:1024:4:1:-1:-1:5</cmd>
+			</item>
+			<item name="ZET6223_GT90BH8016">
+				<cmd>setenv wmt.io.touch 1:ZET6223_GT90BH8016:7:600:1024:4:1:1:-1:5</cmd>
+			</item>
+			<item name="ZET6223_CZY6366A01">
+				<cmd>setenv wmt.io.touch 1:ZET6223_CZY6366A01:7:600:1024:4:1:1:-1:5</cmd>
+			</item>
+			<item name="ZET6223_DH0901A1">
+				<cmd>setenv wmt.io.touch 1:ZET6223_DH0901A1:7:600:1024:4:1:1:-1:5</cmd>
+			</item>
+			<item name="ZET6223_YDT1203A2">
+				<cmd>setenv wmt.io.touch 1:ZET6223_YDT1203A2:7:768:1024:4:1:1:1:5</cmd>
+			</item>
+			<item name="ZET6223_QL0747">
+				<cmd>setenv wmt.io.touch 1:ZET6223_QL0747:7:800:1280:4:1:1:1:5</cmd>
+			</item>
+			<item name="CTP8_ZET6223_COF_TYPE">
+				<cmd>setenv wmt.io.touch 1:ZET6221_8kotl0416060800:7:768:1024:4:1:1:1:5</cmd>
+			</item>
+			<item name="CTP7_ZET6221_DPCO495">
+				<cmd>setenv wmt.io.touch 1:ZET6221_dpco495b2ylda1:7:600:1024:4:1:-1:1:5:1:0</cmd>
+			</item>
+			<item name="ZET6221_PW07T010C">
+				<cmd>setenv wmt.io.touch 1:ZET6221_PW07T010C:7:480:800:4:-1:1:-1:5:1:0</cmd>
+			</item>
+			<item name="ZET6231_PW07T010C">
+				<cmd>setenv wmt.io.touch 1:ZET6231_PW07T010C:7:480:800:4:-1:1:-1:5:1:0</cmd>
+			</item>
+			<item name="ZET6252_PW07T010C">
+				<cmd>setenv wmt.io.touch 1:ZET6252_PW07T010C:7:480:800:4:-1:1:-1:5:1:0</cmd>
+				<cmd>setenv wmt.backlight.delay 500</cmd>
+			</item>
+			<item name="ZET6231_CTP160070A">
+				<cmd>setenv wmt.io.touch 1:ZET6231_CTP160070A:9:1024:600:4:1:-1:1:5</cmd>
+			</item>
+			<item name="ZET6221_CTP160070A_A">
+				<cmd>setenv wmt.io.touch 1:ZET6221_CTP160070A_A:9:1024:600:4:1:-1:1:5</cmd>
+			</item>
+			<item name="ZET6251_CTP160070A">
+				<cmd>setenv wmt.io.touch 1:ZET6251_CTP160070A:9:1024:600:4:1:1:-1:5</cmd>
+				<cmd>setenv wmt.backlight.delay 500</cmd>
+			</item>
+			<item name="ZET6251_1_CTP160070A">
+				<cmd>setenv wmt.io.touch 1:ZET6251_1_CTP160070A:9:1024:600:4:1:1:-1:5</cmd>
+				<cmd>setenv wmt.backlight.delay 500</cmd>
+			</item>
+			<item name="ZET6251_ZCC2253_8375">
+				<cmd>setenv wmt.io.touch 1:ZET6251_ZCC2253_8375:7:1024:600:4:1:1:-1:5</cmd>
+				<cmd>setenv wmt.backlight.delay 500</cmd>
+			</item>
+			<item name="ZET6251_CZY6489A01">
+				<cmd>setenv wmt.io.touch 1:ZET6251_CZY6489A01:7:1024:600:4:1:-1:-1:5:1:0</cmd>
+				<cmd>setenv wmt.backlight.delay 500</cmd>
+			</item>
+			<item name="ZET6251_Z7Z287">
+				<cmd>setenv wmt.io.touch 1:ZET6251_Z7Z287:7:1024:600:4:1:-1:1:5:1:0</cmd>
+				<cmd>setenv wmt.backlight.delay 500</cmd>
+			</item>
+			<item name="ZET6251_YLDCCG7050">
+				<cmd>setenv wmt.io.touch 1:ZET6251_YLDCCG7050:7:1024:600:4:1:-1:1:5:1:0</cmd>
+				<cmd>setenv wmt.backlight.delay 500</cmd>
+			</item>
+			<item name="ZET6221_7GF7003A2">
+				<cmd>setenv wmt.io.touch 1:ZET6221_7GF7003A2:9:1024:600:4:1:-1:1:5</cmd>
+			</item>
+			<item name="ZET6221_7Z7Z233">
+				<cmd>setenv wmt.io.touch 1:ZET6221_7Z7Z233:9:1024:600:4:1:-1:1:5:1:0</cmd>
+			</item>
+			<item name="ZET6221_ATC7083FPC">
+				<cmd>setenv wmt.io.touch 1:ZET6221_ATC7083FPC:9:1024:600:4:1:-1:1:5:1:0</cmd>
+			</item>
+			<item name="ZET6221_CZY6489A01">
+				<cmd>setenv wmt.io.touch 1:ZET6221_CZY6489A01:7:1024:600:4:1:1:1:5:1:0</cmd>
+			</item>
+			<item name="ZET6251_GF7036A1">
+				<cmd>setenv wmt.io.touch 1:ZET6221_GF7036A1:7:1024:600:4:1:1:1:5:1:0</cmd>
+				<cmd>setenv wmt.backlight.delay 500</cmd>
+			</item>
+			<item name="ZET6251_Z7Z287_1">
+				<cmd>setenv wmt.io.touch 1:ZET6251_Z7Z287_1:7:1024:600:4:1:1:-1:5:1:0</cmd>
+				<cmd>setenv wmt.backlight.delay 500</cmd>
+			</item>
+			<item name="ZET6221_SRGF7033A2PG">
+				<cmd>setenv wmt.io.touch 1:ZET6221_SRGF7033A2PG:9:1024:600:4:1:-1:1:5:1:0</cmd>
+			</item>
+			<item name="ZET6221_CZY6479A01">
+				<cmd>setenv wmt.io.touch 1:ZET6221_CZY6479A01:9:1024:600:4:1:-1:1:5:1:0</cmd>
+			</item>
+			<item name="ZET6221_CTP160070A">
+				<cmd>setenv wmt.io.touch 1:ZET6221_CTP160070A:9:1024:600:4:1:-1:1:5:1:0</cmd>
+			</item>			
+			<item name="ZET6221_QL0724FPC">
+				<cmd>setenv wmt.io.touch 1:ZET6221_QL0724FPC:9:1024:600:4:1:-1:1:5:1:0</cmd>
+			</item>
+			<item name="ZET6231_8atc8035B">
+				<cmd>setenv wmt.io.touch 1:ZET6231_8atc8035B:7:600:800:4:1:-1:-1:5</cmd>
+			</item>
+			<item name="ZET6221_7CT1786A">
+				<cmd>setenv wmt.io.touch 1:ZET6231_7CT1786A:7:600:800:4:1:-1:1:5</cmd>
+			</item>
+			<item name="ZET6221_7m6139av01">
+				<cmd>setenv wmt.io.touch 1:ZET6221_7m6139av01:7:480:800:4:1:-1:1:5</cmd>
+			</item>
+			<item name="ZET6221_XCLG7027A">
+				<cmd>setenv wmt.io.touch 1:ZET6221_7xclg7027a:7:480:800:4:1:-1:1:5</cmd>
+			</item>
+			<item name="ZET6221_7ATC7055_GT7305">
+				<cmd>setenv wmt.io.touch 1:ZET6221_7ATC7055_GT7305:7:480:800:4:1:-1:1:5</cmd>
+			</item>
+			<item name="ZET6221_7ATC7055_GT7320">
+				<cmd>setenv wmt.io.touch 1:ZET6221_7ATC7055_GT7320:7:480:800:4:1:1:1:5</cmd>
+			</item>
+			<item name="ZET6221_DZHADC701299">
+				<cmd>setenv wmt.io.touch 1:ZET6221_DZHADC701299:7:480:800:4:1:-1:1:5</cmd>
+			</item>
+			<item name="ZET6221_HLT">
+				<cmd>setenv wmt.io.touch 1:ZET6221_HLT:7:480:800:4:1:1:1:5</cmd>
+			</item>
+			<item name="ZET6231_7ATC7055">
+				<cmd>setenv wmt.io.touch 1:ZET6231_7ATC7055:7:480:800:4:1:-1:1:5</cmd>
+			</item>
+			<item name="ZET6231_FPCA01330">
+				<cmd>setenv wmt.io.touch 1:ZET6231_FPCA01330:7:480:800:4:1:-1:1:5</cmd>
+			</item>
+			<item name="ZET6231_LC">
+				<cmd>setenv wmt.io.touch 1:ZET6231_LC:7:480:800:4:1:-1:1:5</cmd>
+			</item>
+			<item name="ZET6231_7085770">
+				<cmd>setenv wmt.io.touch 1:ZET6231_7085770:7:480:800:4:1:-1:1:5</cmd>
+			</item>
+			<item name="ZET6231_TPC0957">
+				<cmd>setenv wmt.io.touch 1:ZET6231_TPC0957:7:480:800:4:1:-1:1:5</cmd>
+			</item>
+			<item name="ZET6231_TYF1128V1">
+				<cmd>setenv wmt.io.touch 1:ZET6231_TYF1128V1:7:480:800:4:1:-1:1:5</cmd>
+			</item>
+			<item name="ZET6231_TYF1156V1">
+				<cmd>setenv wmt.io.touch 1:ZET6231_TYF1128V1:7:480:800:4:1:1:1:5</cmd>
+			</item>
+			<item name="ZET6231_701015">
+				<cmd>setenv wmt.io.touch 1:ZET6231_701015:7:480:800:4:1:-1:1:5</cmd>
+			</item>
+			<item name="ZET6231_0702223T">
+				<cmd>setenv wmt.io.touch 1:ZET6231_0702223T:7:480:800:4:1:-1:1:5</cmd>
+			</item>
+			<item name="ZET6231_LCGS070857A0">
+				<cmd>setenv wmt.io.touch 1:ZET6231_LCGS070857A0:7:480:800:4:1:-1:1:5</cmd>
+			</item>			
+			<item name="ZET6221_YLCG0025A1">
+				<cmd>setenv wmt.io.touch 1:ZET6221_YLCG0025A1:7:1024:600:4:1:1:1:5:1:0</cmd>
+			</item>
+			<item name="ZET6251_YLCG0025A1">
+				<cmd>setenv wmt.io.touch 1:ZET6251_YLCG0025A1:7:600:1024:4:1:-1:1:5:1:0</cmd>
+			</item>
+			<item name="ZET6221_GF7036A1-FPC">
+				<cmd>setenv wmt.io.touch 1:ZET6221_GF7036A1-FPC:7:1024:600:4:1:1:1:5:1:0</cmd>
+			</item>
+			<item name="ZET6221_LS0001-FHX">
+				<cmd>setenv wmt.io.touch 1:ZET6221_LS0001-FHX:7:1024:600:4:1:1:1:5:1:0</cmd>
+			</item>
+			<item name="ZET6221_Z7Z287">
+				<cmd>setenv wmt.io.touch 1:ZET6221_Z7Z287:7:1024:600:4:1:1:1:5:1:0</cmd>
+			</item>
+			<item name="ZET6221_ZCC2302">
+				<cmd>setenv wmt.io.touch 1:ZET6221_GF7036A1-FPC:7:1024:600:4:1:-1:-1:5:1:0</cmd>
+			</item>
+			<item name="ZET6251_JUZ7Z35SR">
+				<cmd>setenv wmt.io.touch 1:ZET6251_JUZ7Z35SR:7:480:800:4:1:-1:1:5</cmd>
+			</item>
+			<item name="ZET6251_W70-FPC">
+				<cmd>setenv wmt.io.touch 1:ZET6251_W70-FPC:7:480:800:4:1:-1:1:5</cmd>
+			</item>
+			<item name="ZET6251_V7_CTP160070A">
+				<cmd>setenv wmt.io.touch 1:ZET6251_V7_CTP160070A:7:600:1024:4:1:-1:1:5</cmd>
+			</item>
+			<item name="ZET6251_MAZ7Z233">
+				<cmd>setenv wmt.io.touch 1:ZET6251_MAZ7Z233:7:600:1024:4:1:-1:1:5</cmd>
+			</item>
+			<item name="ZET6251_SX700729">
+				<cmd>setenv wmt.io.touch 1:ZET6251_SX700729:7:600:1024:4:1:-1:1:5</cmd>
+			</item>
+			<item name="CYP140_OGSMMAX">
+				<cmd>setenv wmt.io.touch 1:cyp140:7:600:1024:4:0:1:-1:5</cmd>
+				<cmd>setprop ro.wmt.touchpannel 1</cmd>
+			</item>
+			<item name="FT5406_ILITEK">
+				<cmd>setenv wmt.io.touch 1:ft5406:7:600:1024:4:0:0:0:5:38</cmd>
+			</item>
+			<item name="FT5406_MMAX">
+				<cmd>setenv wmt.io.touch 1:ft5406:7:768:1024:4:1:0:0:5:38</cmd>
+			</item>
+			<item name="FT5506_V971">
+				<cmd>setenv wmt.io.touch 1:ft5506:7:768:1024:4:0:1:0:5:38</cmd>
+			</item>
+			<item name="FT5406_MMAX_JINLONG">
+				<cmd>setenv wmt.io.touch 1:ft5406:7:768:1024:4:0:0:0:5:3b</cmd>
+			</item>
+			<item name="FT5306_GKG0358A2">
+				<cmd>setenv wmt.io.touch 1:ft5306:7:600:1024:4:1:0:1:5:38</cmd>
+				<cmd>setenv wmt.io.ts.upg GKG0358A2</cmd>
+			</item>
+			<item name="FT5402_PB101A9150">
+				<cmd>setenv wmt.io.touch 1:ft5402_PB101A9150:7:800:1280:4:0:1:0:5:38</cmd>
+			</item>
+			<item name="AW5208">
+				<cmd>setenv wmt.io.touch 1:aw5306_AWTPucf:9:600:1024:4:0:0:1:5:38</cmd>
+			</item>
+			<item name="LW86X0_RNTP78101">
+				<cmd>setenv wmt.io.touch 1:LW86X0_RNTP78101:7:480:800:4:0:1:1:10:18</cmd>
+			</item>
+			<item name="SSD2543_72444A3">
+				<cmd>setenv wmt.io.touch 1:SSD253X_72444A3:7:800:1280:4:1:-1:0:1:-1</cmd>
+			</item>
+			<item name="SSD253X_CZY6113A1">
+				<cmd>setenv wmt.io.touch 1:SSD253X_CZY6113A1:7:600:1024:4:1:1:0:-1:-1</cmd>
+			</item>
+			<item name="GT911_M718">
+				<cmd>setenv wmt.io.touch 1:gt9xx_M718:7:768:1024:4:0:1:1:5:5d</cmd>
+			</item>
+			<item name="GT928_V971">
+				<cmd>setenv wmt.io.touch 1:gt9xx_V971:7:768:1024:4:0:1:1:5:5d</cmd>
+			</item>
+			<item name="ICN8303_GKG0358A">
+				<cmd>setenv wmt.io.touch 1:ICN8303_GKG0358A:7:600:1024:4:1:1:1:0</cmd>
+			</item>
+			<description>本项用于测试和扩展，不是必填项目</description>
+		</TOUCH>
+		<KEY_PAD lable="按键" default="">
+			<item name="默认">
+				<description>已经在Common UBOOT ENV中了</description>
+			</item>
+			<item name="默认(音量键交换)">
+				<cmd>setenv wmt.sys.keypad baseboard:1:rc_1:5:r0_9e:r1_8b:r2_72:r3_73:r4_66</cmd>
+			</item>
+			<item name="无">
+				<cmd>setenv wmt.sys.keypad </cmd>
+			</item>
+		</KEY_PAD>
+		<VIBRATE lable="振动" default="">
+			<item name="默认">
+				<cmd></cmd>
+				<description>已经在Common UBOOT ENV中了</description>
+			</item>
+			<item name="无">
+				<cmd>setenv wmt.gpo.vibrator </cmd>
+			</item>
+		</VIBRATE>
+		<SENSOR lable="重力传感器" default="">
+			<item name="默认">
+				<cmd></cmd>
+				<description>已经在Common UBOOT ENV中了</description>
+			</item>
+			<item name="无">
+				<cmd>setenv wmt.io.kxte9gsensor </cmd>
+				<cmd>setenv wmt.io.mc3230sensor </cmd>
+				<cmd>setenv wmt.io.dm08sensor </cmd>
+				<cmd>setenv wmt.io.mma7660gsensor </cmd>
+				<cmd>setenv wmt.gpt.gsensor </cmd>
+			</item>
+			<item name="mxc622xsensor_1">
+				<cmd>setenv wmt.io.mxc622xsensor 1:3:10:1:-1:0:-1:2:1:0:0:0</cmd>
+			</item>
+			<item name="mc3230sensor_1">
+				<cmd>setenv wmt.io.mc3230sensor 1:3:10:0:-1:1:1:2:-1:0:0:0</cmd>
+			</item>
+			<item name="mc3230sensor_2">
+				<cmd>setenv wmt.io.mc3230sensor 1:3:10:0:-1:1:-1:2:1:0:0:0</cmd>
+			</item>
+			<item name="mc3230sensor_3">
+				<cmd>setenv wmt.io.mc3230sensor 1:3:10:0:1:1:-1:2:-1:0:0:0</cmd>
+			</item>
+			<item name="mc3230sensor_4">
+				<cmd>setenv wmt.io.mc3230sensor 1:3:10:0:1:1:1:2:1:0:0:0</cmd>
+			</item>
+			<item name="mc3230sensor_5">
+				<cmd>setenv wmt.io.mc3230sensor 1:3:10:1:1:0:1:2:-1:0:0:0</cmd>
+			</item>
+			<item name="mc3230sensor_6">
+				<cmd>setenv wmt.io.mc3230sensor 1:3:10:1:-1:0:-1:2:-1:0:0:0</cmd>
+			</item>
+			<item name="mma7660gsensor_1">
+				<cmd>setenv wmt.io.mma7660gsensor 1:0:-1:1:-1:2:1:0:0:0</cmd>
+			</item>
+			<item name="mma7660gsensor_2">
+				<cmd>setenv wmt.io.mma7660gsensor 1:0:1:1:-1:2:-1:0:0:0</cmd>
+			</item>
+			<item name="mma7660gsensor_3">
+				<cmd>setenv wmt.io.mma7660gsensor 1:0:1:1:-1:2:1:0:0:0</cmd>
+			</item>
+			<item name="mma7660gsensor_4">
+				<cmd>setenv wmt.io.mma7660gsensor 1:1:-1:0:-1:2:-1:0:0:0</cmd>
+			</item>
+			<item name="mma7660gsensor_5">
+				<cmd>setenv wmt.io.mma7660gsensor 1:1:1:0:1:2:-1:0:0:0</cmd>
+			</item>
+			<item name="mma7660gsensor_6">
+				<cmd>setenv wmt.io.mma7660gsensor 1:0:-1:1:1:2:1:0:0:0</cmd>
+			</item>
+			<item name="mma7660gsensor_7">
+				<cmd>setenv wmt.io.mma7660gsensor 1:0:-1:1:1:2:-1:0:0:0</cmd>
+			</item>
+			<item name="dmard06gsensor_1">
+				<cmd>setenv wmt.io.d06sensor 1:3:5:0:-1:1:-1:2:1:0:0:0</cmd>
+			</item>
+			<item name="stk8312sensor_1">
+				<cmd>setenv wmt.io.stk8312sensor 1:0:-1:1:-1:2:1:0:0:0</cmd>
+			</item>
+			<item name="stk8312sensor_2">
+				<cmd>setenv wmt.io.stk8312sensor 1:0:1:1:-1:2:-1:0:0:0</cmd>
+			</item>
+			<item name="stk8312sensor_3">
+				<cmd>setenv wmt.io.stk8312sensor 1:0:1:1:-1:2:1:0:0:0</cmd>
+			</item>
+			<item name="stk8312sensor_4">
+				<cmd>setenv wmt.io.stk8312sensor 1:1:-1:0:-1:2:-1:0:0:0</cmd>
+			</item>
+			<item name="stk8312sensor_5">
+				<cmd>setenv wmt.io.stk8312sensor 1:1:1:0:1:2:-1:0:0:0</cmd>
+			</item>
+			<item name="stk8312sensor_6">
+				<cmd>setenv wmt.io.stk8312sensor 1:0:-1:1:1:2:1:0:0:0</cmd>
+			</item>
+			<item name="stk8312sensor_7">
+				<cmd>setenv wmt.io.stk8312sensor 1:0:-1:1:1:2:-1:0:0:0</cmd>
+			</item>
+			<item name="mma8452qgsensor_1">
+				<cmd>setenv wmt.io.mma8452qgsensor 1:0:-1:1:-1:2:1:0:0:0</cmd>
+			</item>
+			<item name="mma8452qgsensor_2">
+				<cmd>setenv wmt.io.mma8452qgsensor 1:0:1:1:-1:2:-1:0:0:0</cmd>
+			</item>
+			<item name="mma8452qgsensor_3">
+				<cmd>setenv wmt.io.mma8452qgsensor 1:0:1:1:-1:2:1:0:0:0</cmd>
+			</item>
+			<item name="mma8452qgsensor_4">
+				<cmd>setenv wmt.io.mma8452qgsensor 1:1:-1:0:-1:2:-1:0:0:0</cmd>
+			</item>
+			<item name="mma8452qgsensor_5">
+				<cmd>setenv wmt.io.mma8452qgsensor 1:1:1:0:1:2:-1:0:0:0</cmd>
+			</item>
+			<item name="mma8452qgsensor_6">
+				<cmd>setenv wmt.io.mma8452qgsensor 1:0:-1:1:1:2:1:0:0:0</cmd>
+			</item>
+			<item name="mma8452qgsensor_7">
+				<cmd>setenv wmt.io.mma8452qgsensor 1:0:-1:1:1:2:-1:0:0:0</cmd>
+			</item>
+		</SENSOR>
+		<CODEC lable="声卡" default="">
+			<item name="默认">
+				<cmd></cmd>
+				<description>已经在Common UBOOT ENV中了</description>
+			</item>
+			<item name="默认(耳机插入时高电平)">
+				<cmd>setenv wmt.audio.i2s vt1603:1</cmd>
+			</item>
+			<item name="HW DAC-板上没有声卡">
+				<cmd>setenv wmt.audio.i2s hwdac</cmd>
+			</item>
+		</CODEC>
+		<SPEAKER lable="喇叭" default="">
+			<item name="默认">
+				<cmd></cmd>
+			</item>
+			<item name="单喇叭-左声道">
+				<cmd>setprop ro.wmt.audio.hardware MONOMIX=[1,0],USBMIC=[0],AMPCTRL=[0,0,0,0],HSMICCTRL=[0,0,0,0]</cmd>
+			</item>
+			<item name="单喇叭-右声道">
+				<cmd>setprop ro.wmt.audio.hardware MONOMIX=[1,1],USBMIC=[0],AMPCTRL=[0,0,0,0],HSMICCTRL=[0,0,0,0]</cmd>
+			</item>
+			<item name="陶瓷喇叭">
+				<cmd>setprop ro.wmt.audio.hardware MONOMIX=[0,0],USBMIC=[0],AMPCTRL=[0,0,0,0],HSMICCTRL=[0,0,0,0]</cmd>
+			</item>
+		</SPEAKER>
+		<BATTERY lable="电池" default="">
+			<item name="默认">
+				<cmd></cmd>
+			</item>
+			<item name="无">
+				<cmd>setenv wmt.io.bat</cmd>
+				<cmd>setenv wmt.io.bateff.brightness</cmd>
+				<cmd>setenv wmt.io.bateff.wifi</cmd>
+				<cmd>setenv wmt.io.bateff.adapter</cmd>
+				<cmd>setenv wmt.gpi.bat</cmd>
+				<cmd>setenv wmt.charger.param</cmd>
+				<cmd>setenv wmt.display.chargeanim 0</cmd>
+			</item>
+		</BATTERY>
+		<MODEM lable="2/3G通话模块" default="">
+			<item name="无">
+				<cmd></cmd>
+			</item>
+			<item name="USB接口">
+				<cmd>setenv wmt.org.direction 0</cmd>
+				<cmd>setprop ro.display.landscape 0</cmd>
+				<cmd>setprop ril.modem.enable 1</cmd>
+				<cmd>setprop ril.voice.enable 1</cmd>
+				<cmd>setprop ro.wmt.call.volume EARP=[0,6],HS=[0,12],HF=[0,18]</cmd>
+			</item>			
+			<item name="展讯+串口1">
+			    <cmd>setenv wmt.uart.modem2g 1</cmd>
+				<cmd>setenv wmt.org.direction 0</cmd>
+				<cmd>setprop ro.display.landscape 0</cmd>
+				<cmd>setprop ril.modem.type 7</cmd>
+				<cmd>setprop ril.voice.enable 1</cmd>
+				<cmd>setprop ro.wmt.call.volume EARP=[0,6],HS=[0,12],HF=[0,18]</cmd>
+			</item>
+			<item name="展讯+串口3">
+			    <cmd>setenv wmt.uart.modem2g 3</cmd>
+				<cmd>setenv wmt.org.direction 0</cmd>
+				<cmd>setprop ro.display.landscape 0</cmd>
+				<cmd>setprop ril.modem.type 7</cmd>
+				<cmd>setprop ril.voice.enable 1</cmd>
+				<cmd>setprop ro.wmt.call.volume EARP=[0,6],HS=[0,12],HF=[0,18]</cmd>
+			</item>			
+			<item name="MTK">
+				<cmd>setenv wmt.org.direction 0</cmd>
+				<cmd>setprop ro.display.landscape 0</cmd>
+				<cmd>setprop ril.modem.type 3</cmd>
+				<cmd>setprop ril.voice.enable 1</cmd>
+				<cmd>setprop ro.wmt.call.volume EARP=[0,6],HS=[0,12],HF=[0,18]</cmd>
+			</item>			
+			<item name="RDA">
+				<cmd>setenv wmt.org.direction 0</cmd>
+				<cmd>setprop ro.display.landscape 0</cmd>
+				<cmd>setprop ril.modem.type 10</cmd>
+				<cmd>setprop ril.voice.enable 1</cmd>
+				<cmd>setprop ro.wmt.drv.add2 n_gsm_rda</cmd>
+				<cmd>setprop ro.wmt.call.volume EARP=[0,6],HS=[0,12],HF=[0,18]</cmd>
+			</item>
+			<item name="hw mu509">
+				<cmd>setenv wmt.org.direction 0</cmd>
+				<cmd>setenv wmt.modem.onboard 1</cmd>
+				<cmd>setenv wmt.pmc.param 1:0070c000:44000000:00000000:00700000:1</cmd>
+				<cmd>setprop ro.display.landscape 0</cmd>
+				<cmd>setprop ril.modem.enable 1</cmd>
+				<cmd>setprop ril.voice.enable 1</cmd>
+				<cmd>setprop ro.wmt.call.volume EARP=[0,6],HS=[0,12],HF=[0,18]</cmd>
+				<cmd>setprop ro.wmt.audio.hardware MONOMIX=[0,0],USBMIC=[0],PCMCOMP=[1]</cmd>
+				<cmd>setprop ro.wmt.drv.add s_wmt_lsensor_cm3232</cmd>
+			</item>	
+			<item name="via-telecom evdo">
+				<cmd>setenv wmt.org.direction 0</cmd>
+				<cmd>setenv wmt.modem.viatel.aprdy 1</cmd>
+				<cmd>setenv wmt.modem.viatel.4wire 16:6:10:152</cmd>
+				<cmd>setenv wmt.pmc.param 1:0030c084:44000000:00000000:00200080:1</cmd>
+				<cmd>setprop ro.display.landscape 0</cmd>
+				<cmd>setprop ril.powerway 1</cmd>
+			    <cmd>setprop ril.voice.enable 1</cmd>
+				<cmd>setprop ril.modem.enable 1</cmd>
+				<cmd>setprop ro.wmt.drv.add s_wmt_lsensor_cm3232,via_option</cmd>
+			</item>	
+			<item name="hw mt509">
+				<cmd>setenv wmt.org.direction 0</cmd>
+				<cmd>setenv wmt.modem.onboard 1</cmd>
+				<cmd>setprop ro.display.landscape 0</cmd>
+				<cmd>setprop ril.modem.enable 1</cmd>
+				<cmd>setprop ril.voice.enable 1</cmd>
+				<cmd>setprop ro.wmt.call.volume EARP=[0,6],HS=[0,12],HF=[0,18]</cmd>				
+				<cmd>setprop ro.wmt.drv.add s_wmt_lsensor_cm3232</cmd>
+			</item>		
+		</MODEM>		
+	</modules>
+</project>

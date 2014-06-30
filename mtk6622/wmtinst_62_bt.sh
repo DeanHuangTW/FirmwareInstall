@@ -12,6 +12,17 @@
 # AND WonderMedia TECHNOLOGIES, INC. DISCLAIMS ALL EXPRESS OR IMPLIED WARRANTIES 
 # OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, QUIET ENJOYMENT OR NON-INFRINGEMENT.  
 #
+#
+#mtk6622 related fwc configuration as follows:
+#	setenv wmt.bt.tty 1                       //for add delay in uart drivers before uart tx
+#	setenv wmt.bt.pmcmtk6622 23100000         //for pcm configuration with viatelcomm modem C218E
+#	setprop ro.wmt.bt bt_hwctl                //mtk6622 bluetooth power manager drivers
+#	cp -ar bluetooth/. ${instenv_fs_root}/    //display bluetooth setting UI and bluetooth.apk
+#	export BT_model=MTK6622				      //copy mtk6622 bluedroid dynamic libralary
+#
+#
+#
+#
 
 #$1 is current path, don't use pwd
 local_path="$1"

@@ -141,6 +141,7 @@ msg_info "DON'T REMOVE INSTALLATION MEDIA..."
 # install_modules="wload uboot"
 # Note: bootimg means both kernel and init ramdisk such as ramdisk.img/ramdisk_recovery.img
 install_modules="systemdata wload uboot env logo_bootimg"
+#install_modules="systemdata env"
 
 info 0 "Install below modules:"
 info 0 "  $install_modules"
